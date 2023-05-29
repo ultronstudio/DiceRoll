@@ -41,7 +41,11 @@
             this.btnMin = new System.Windows.Forms.Button();
             this.btnStejne = new System.Windows.Forms.Button();
             this.lblPredchozi = new System.Windows.Forms.Label();
+            this.tboxSazka = new System.Windows.Forms.TextBox();
+            this.btnVsadit = new System.Windows.Forms.Button();
+            this.gBoxSazka = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.picboxKostka)).BeginInit();
+            this.gBoxSazka.SuspendLayout();
             this.SuspendLayout();
             // 
             // sEllipseForm
@@ -180,12 +184,51 @@
             this.lblPredchozi.TabIndex = 7;
             this.lblPredchozi.Text = "Předchozí hozená hodnota: 0";
             // 
+            // tboxSazka
+            // 
+            this.tboxSazka.Location = new System.Drawing.Point(6, 17);
+            this.tboxSazka.Name = "tboxSazka";
+            this.tboxSazka.Size = new System.Drawing.Size(100, 20);
+            this.tboxSazka.TabIndex = 9;
+            // 
+            // btnVsadit
+            // 
+            this.btnVsadit.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.btnVsadit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnVsadit.FlatAppearance.BorderSize = 0;
+            this.btnVsadit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DodgerBlue;
+            this.btnVsadit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DodgerBlue;
+            this.btnVsadit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVsadit.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnVsadit.ForeColor = System.Drawing.Color.White;
+            this.btnVsadit.Location = new System.Drawing.Point(20, 43);
+            this.btnVsadit.Name = "btnVsadit";
+            this.btnVsadit.Size = new System.Drawing.Size(75, 30);
+            this.btnVsadit.TabIndex = 10;
+            this.btnVsadit.Text = "VSADIT";
+            this.btnVsadit.UseVisualStyleBackColor = false;
+            this.btnVsadit.Click += new System.EventHandler(this.btnVsadit_Click);
+            this.btnVsadit.MouseHover += new System.EventHandler(this.btnVsadit_MouseHover);
+            // 
+            // gBoxSazka
+            // 
+            this.gBoxSazka.BackColor = System.Drawing.Color.Transparent;
+            this.gBoxSazka.Controls.Add(this.btnVsadit);
+            this.gBoxSazka.Controls.Add(this.tboxSazka);
+            this.gBoxSazka.Location = new System.Drawing.Point(25, 213);
+            this.gBoxSazka.Name = "gBoxSazka";
+            this.gBoxSazka.Size = new System.Drawing.Size(113, 81);
+            this.gBoxSazka.TabIndex = 11;
+            this.gBoxSazka.TabStop = false;
+            this.gBoxSazka.Text = "Částka k sázce:";
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 306);
+            this.Controls.Add(this.gBoxSazka);
             this.Controls.Add(this.lblPredchozi);
             this.Controls.Add(this.btnStejne);
             this.Controls.Add(this.btnMin);
@@ -200,6 +243,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Dice Roll";
             ((System.ComponentModel.ISupportInitialize)(this.picboxKostka)).EndInit();
+            this.gBoxSazka.ResumeLayout(false);
+            this.gBoxSazka.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -219,6 +264,9 @@
         private System.Windows.Forms.Button btnMin;
         private System.Windows.Forms.Button btnStejne;
         private System.Windows.Forms.Label lblPredchozi;
+        private System.Windows.Forms.TextBox tboxSazka;
+        private System.Windows.Forms.Button btnVsadit;
+        private System.Windows.Forms.GroupBox gBoxSazka;
     }
 }
 

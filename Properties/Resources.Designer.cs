@@ -131,6 +131,15 @@ namespace DiceRoll.Properties {
         }
         
         /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.IO.UnmanagedMemoryStream podobný System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream coin {
+            get {
+                return ResourceManager.GetStream("coin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap dead {
@@ -156,6 +165,16 @@ namespace DiceRoll.Properties {
         internal static System.IO.UnmanagedMemoryStream game_over {
             get {
                 return ResourceManager.GetStream("game_over", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap nomoney {
+            get {
+                object obj = ResourceManager.GetObject("nomoney", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

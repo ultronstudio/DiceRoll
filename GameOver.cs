@@ -18,9 +18,19 @@ namespace DiceRoll
     {
         public static string _title, _description, _buttontext;
         public static Image _icon;
-        private static SoundPlayer _soundPlayer;
+        public static SoundPlayer _soundPlayer;
 
-        public GameOver(string title, string description, Image icon, string buttontext, SoundPlayer soundPlayer)
+        public GameOver()
+        {
+            InitializeComponent();
+
+            lblTitle.Text = _title;
+            lblText.Text = _description;
+            btnPlayAgain.Text = _buttontext;
+            picboxIkona.BackgroundImage = _icon;
+        }
+
+        public GameOver(string title, string description, string buttontext, Image icon, SoundPlayer soundPlayer)
         {
             InitializeComponent();
 
@@ -35,6 +45,8 @@ namespace DiceRoll
             btnPlayAgain.Text = _buttontext;
             _soundPlayer = soundPlayer;
         }
+
+        private static GameOver gameOver = new GameOver(_title, _description, _buttontext, _icon, _soundPlayer);
 
         private void btnPlayAgain_Click(object sender, EventArgs e)
         {
@@ -79,8 +91,6 @@ namespace DiceRoll
             {
                 throw new ArgumentException($"Hodnota {nameof(_buttontext)} nemůže být nulová a toto pole nemůže být prázdné.", nameof(_buttontext));
             }
-
-            GameOver gameOver = new GameOver(_title, _description, _icon, _buttontext, _soundPlayer);
 
             return gameOver.ShowDialog();
         }

@@ -17,63 +17,61 @@ namespace DiceRoll
     public partial class Game : Form
     {
         private readonly Random random = new Random();
-        private int faze = 3;
+        private int faze = 4;
         private SoundPlayer kostkaHod = new SoundPlayer(Resources.sRoll);
         private bool povolTimer = false;
         private static int skorePuvodni = 149;
         private int skore = 149;
-        private int predchoziKostka = 0;
-        private int aktualniKostka = 0;
-        private bool typVic = false;
-        private bool typStejne = false;
-        private bool typMin = false;
-        private int cisloKostka = 0;
+        private int predchoziKostka, cisloKostka, aktualniKostka = 0;
+        private bool typVic, typStejne, typMin = false;
+        private int sazka = 10;
         private static Random nahoda = new Random();
         private static List<string> osobyList = new List<string>
-                    {
-                        "sestru",
-                        "bratra",
-                        "babičku",
-                        "dědu",
-                        "maminku",
-                        "tatínka",
-                        "strýce",
-                        "tetu",
-                        "přítele",
-                        "přítelkyni",
-                        "manžela",
-                        "manželku",
-                        "syna",
-                        "dceru",
-                        "kamaráda",
-                        "kamarádku",
-                        "souseda",
-                        "sousedku",
-                        "šéfa",
-                        "kolegu",
-                        "bratrance",
-                        "neteř",
-                        "švagrovou",
-                        "švagra",
-                        "kmotra",
-                        "kmotru",
-                        "tchána",
-                        "tchýni",
-                        "zeťě",
-                        "snachu",
-                        "staršího bratra",
-                        "nevlasntí sestru",
-                        "zubaře",
-                        "kadeřníka",
-                        "třídního učitele",
-                        "třídní učitleku",
-                        "spolubydlícího",
-                        "spolubydlící",
-                        "prodavače",
-                        "prodavačku",
-                        "policistu",
-                        "policistku"
-                    };
+        {
+            "sestru",
+            "bratra",
+            "babičku",
+            "dědu",
+            "maminku",
+            "tatínka",
+            "strýce",
+            "tetu",
+            "přítele",
+            "přítelkyni",
+            "manžela",
+            "manželku",
+            "syna",
+            "dceru",
+            "kamaráda",
+            "kamarádku",
+            "souseda",
+            "sousedku",
+            "šéfa",
+            "kolegu",
+            "bratrance",
+            "neteř",
+            "švagrovou",
+            "švagra",
+            "kmotra",
+            "kmotru",
+            "tchána",
+            "tchýni",
+            "zeťě",
+            "snachu",
+            "staršího bratra",
+            "nevlasntí sestru",
+            "zubaře",
+            "kadeřníka",
+            "třídního učitele",
+            "třídní učitleku",
+            "spolubydlícího",
+            "spolubydlící",
+            "prodavače",
+            "prodavačku",
+            "policistu",
+            "policistku"
+        };
+
         private static List<string> cenyList = new List<string>
         {
             "kafe",
@@ -81,7 +79,7 @@ namespace DiceRoll
             "4,65 litrů nafty",
             "8 láhvy Dobrých vod (1,5 litru)",
             "2 másla (250 g)",
-            "plyšový medvídek",
+            "plyšového medvídka",
             "2 bochníky chleba",
             "hrníček s nápisem 'Ráno jsem lidská bytost až po první šálku kávy'",
             "pivní sprchový gel",
@@ -92,8 +90,10 @@ namespace DiceRoll
 
         private static string[] osobyPole = osobyList.ToArray();
         private static string[] cenyPole = cenyList.ToArray();
-        private static SoundPlayer gameOverSound = new SoundPlayer(Properties.Resources.game_over);
-        private static SoundPlayer victorySound = new SoundPlayer(Properties.Resources.victory);
+        private static SoundPlayer gameOverSound = new SoundPlayer(Resources.game_over);
+        private static SoundPlayer victorySound = new SoundPlayer(Resources.victory);
+        private static SoundPlayer noMoneySound = new SoundPlayer(Resources.coin);
+        private GameOver gameOver;
 
         private int RandomNumber(int min, int max)
         {
@@ -129,17 +129,20 @@ namespace DiceRoll
             btnVic.Visible = false;
             btnMin.Visible = false;
             btnStejne.Visible = false;
+            btnVsadit.Visible = false; // Schovat tlačítko pro sázku
+            tboxSazka.Enabled = false; // Zakázat úpravu sázky
             lblPenize.Text = $"{skorePuvodni} Kč";
+            tboxSazka.Text = $"{sazka}";
         }
 
         private void btnAppClose_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            Close();
         }
 
         private void btnAppClose_MouseHover(object sender, EventArgs e)
         {
-            tooltip.SetToolTip(btnAppClose, "Close");
+            tooltip.SetToolTip(btnAppClose, "Zavřít");
         }
 
         private void btnHazej_Click(object sender, EventArgs e)
@@ -152,18 +155,11 @@ namespace DiceRoll
             }
         }
 
-        private GameOver GetGameOver(bool konec)
+        private GameOver GetGameOver(string title, string description, string buttontext, Image icon, SoundPlayer soundPlayer)
         {
-            if (!konec)
-            {
-                GameOver gameOver = new GameOver("¨Vyhrál jsi", $"Za vyhraných {skore} Kč jsi jako dárek pro {osobyPole[(nahoda.Next(0, osobyPole.Length))]} koupil {cenyPole[(nahoda.Next(0, cenyPole.Length))]}", Resources.win, "Hrát znovu", victorySound);
-                return gameOver;
-            }
-            else
-            {
-                GameOver gameOver = new GameOver("Konec hry", $"Prohrál jsi svých {skorePuvodni} Kč, které jsi měl původně na dárek pro {osobyPole[(nahoda.Next(0, osobyPole.Length))]}", Resources.dead, "Hrát znovu", gameOverSound);
-                return gameOver;
-            }
+            gameOver = new GameOver(title, description, buttontext, icon, soundPlayer);
+
+            return gameOver;
         }
 
         private void timerHod_Tick(object sender, EventArgs e)
@@ -190,6 +186,8 @@ namespace DiceRoll
                 btnMin.Enabled = true;
                 btnVic.Enabled = true;
                 btnStejne.Enabled = true;
+                btnVsadit.Visible = true; // Zobrazit tlačítko pro sázku
+                tboxSazka.Enabled = true; // Povolit úpravu sázky
                 btnHazej.Visible = false;
 
                 predchoziKostka = aktualniKostka; // Přepsání předchozí hodnoty na aktuální hodnotu
@@ -197,22 +195,18 @@ namespace DiceRoll
 
                 if (predchoziKostka != 0) // Pokud je předchozí hodnota nastavena
                 {
-                    if ((aktualniKostka > predchoziKostka && typVic) || (aktualniKostka < predchoziKostka && typMin))
+                    if ((aktualniKostka > predchoziKostka && typVic) || (aktualniKostka < predchoziKostka && typMin) || ((aktualniKostka == predchoziKostka) && typStejne))
                     {
-                        skore += 10; // Přičtení 10 bodů
-                    }
-                    else if ((aktualniKostka == predchoziKostka) && typStejne)
-                    {
-                        skore += 5; // Přičtení 5 bodů
+                        skore += sazka; // Přičtení vsazených bodů ke skóre uživatele
                     }
                     else
                     {
-                        skore -= 5; // Odečtení 5 bodů
+                        skore -= sazka; // Odečtení vsazených bodů od skóre uživatele
                     }
 
                     if (skore <= 0)
                     {
-                        DialogResult dialogResult = GetGameOver(true).ShowDialog();
+                        DialogResult dialogResult = GetGameOver("Prohrál jsi", $"Prohrál jsi svých {skorePuvodni} Kč, které jsi měl původně na dárek pro {osobyPole[(nahoda.Next(0, osobyPole.Length))]}", "Hrát znovu", Resources.dead, gameOverSound).ShowDialog();
 
                         if(dialogResult == DialogResult.Abort)
                         {
@@ -236,7 +230,7 @@ namespace DiceRoll
 
                     if (skore >= 150)
                     {
-                        DialogResult dialogResult = GetGameOver(false).ShowDialog();
+                        DialogResult dialogResult = GetGameOver("Vyhrál jsi", $"Vyhrál jsi {skore} Kč, za které jsi koupil {cenyPole[(nahoda.Next(0, cenyPole.Length))]} jako dárek pro {osobyPole[(nahoda.Next(0, osobyPole.Length))]}", "Hrát znovu", Resources.win, victorySound).ShowDialog();
 
                         if (dialogResult == DialogResult.Abort)
                         {
@@ -262,6 +256,11 @@ namespace DiceRoll
             }
         }
 
+        private void btnVsadit_MouseHover(object sender, EventArgs e)
+        {
+            tooltip.SetToolTip(btnVsadit, $"Právě máš vsazeno {sazka} Kč");
+        }
+
         private void btnVic_Click(object sender, EventArgs e)
         {
             if (btnVic.Visible)
@@ -273,6 +272,8 @@ namespace DiceRoll
                 btnVic.Visible = true; // Zobrazit pouze tlačítko "VÍC"
                 btnStejne.Visible = false; // Schovat tlačítko "STEJNĚ"
                 btnMin.Visible = false; // Schovat tlačítko "MÍŇ"
+                btnVsadit.Visible = false; // Schovat tlačítko pro sázku
+                tboxSazka.Enabled = false; // Zakázat úpravu sázky
                 btnHazej.Visible = true;
             }
         }
@@ -288,6 +289,8 @@ namespace DiceRoll
                 btnVic.Visible = false; // Schovat tlačítko "VÍC"
                 btnStejne.Visible = false; // Schovat tlačítko "STEJNĚ"
                 btnMin.Visible = true; // Zobrazit pouze tlačítko "MÍŇ"
+                btnVsadit.Visible = false; // Schovat tlačítko pro sázku
+                tboxSazka.Enabled = false; // Zakázat úpravu sázky
                 btnHazej.Visible = true;
             }
         }
@@ -303,7 +306,31 @@ namespace DiceRoll
                 btnVic.Visible = false; // Schovat tlačítko "VÍC"
                 btnStejne.Visible = true; // Zobrazit pouze tlačítko "STEJNĚ"
                 btnMin.Visible = false; // Schovat tlačítko "MÍŇ"
+                btnVsadit.Visible = false; // Schovat tlačítko pro sázku
+                tboxSazka.Enabled = false; // Zakázat úpravu sázky
                 btnHazej.Visible = true;
+            }
+        }
+
+        private void btnVsadit_Click(object sender, EventArgs e)
+        {
+            if(tboxSazka.Text.Length == 0)
+            {
+                tboxSazka.Text = $"{sazka}";
+            }
+
+            if(tboxSazka.Text.Length > 0)
+            {
+                if(int.TryParse(tboxSazka.Text, out int vsadit))
+                {
+                    if(vsadit > skore)
+                    {
+                        DialogResult dialogResult = GetGameOver("Nedostatečné peníze", $"Na svém kontě nemáš dostatečný počet peněz. Chceš vsadit {vsadit} Kč, ale máš pouze {skore} Kč", "Ok", Resources.nomoney, noMoneySound).ShowDialog();
+                    } else
+                    {
+                        sazka = vsadit;
+                    }
+                }
             }
         }
     }
